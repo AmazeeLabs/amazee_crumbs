@@ -1,0 +1,6 @@
+name = Amazee Crumbs
+description = Extends the Crumbs module functionality for Amazee needs.
+core = 7.x
+package = Custom
+
+dependencies[] = crumbs

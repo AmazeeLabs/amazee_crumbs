@@ -1,0 +1,24 @@
+<?php
+
+if (!module_exists('xautoload')) {
+  spl_autoload_register('_amazee_crumbs_autoload');
+}
+
+/**
+ * Autoload callback.
+ */
+function _amazee_crumbs_autoload($class) {
+  if (preg_match('#^amazee_crumbs_(.*)$#', $class, $matches)) {
+    module_load_include('php', 'amazee_crumbs', 'lib/' . strtr($matches[1], '_', '/'));
+  }
+}
+
+/**
+ * Implements hook_crumbs_plugins().
+ *
+ * @param crumbs_InjectedAPI_hookCrumbsPlugins $api
+ */
+function amazee_crumbs_crumbs_plugins($api) {
+  $plugin = new amazee_crumbs_MonoPlugin_FirstPathFromActiveTrail();
+  $api->monoPlugin('firstPathFromActiveTrail', $plugin);
+}
