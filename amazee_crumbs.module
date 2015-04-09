@@ -21,6 +21,9 @@ function _amazee_crumbs_autoload($class) {
 function amazee_crumbs_crumbs_plugins($api) {
   $plugin = new amazee_crumbs_MonoPlugin_FirstPathFromActiveTrail();
   $api->monoPlugin('firstPathFromActiveTrail', $plugin);
+
+  $plugin = new amazee_crumbs_MonoPlugin_NodeTitle();
+  $api->monoPlugin('nodeTitle', $plugin);
 }
 
 /**
