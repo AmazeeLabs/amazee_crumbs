@@ -48,26 +48,28 @@ function amazee_crumbs_query_crumbs_select_menu_links_alter(QueryAlterableInterf
  * Works only if $conf['amazee_crumbs_main_menu_mini_panel'] is set.
  *
  * @return string|null
- *   Menu machine name or NULL.
+ *   Menu machine name, or NULL if menu can't be detected or path is admin.
  */
 function _amazee_crumbs_get_active_main_menu_name() {
   $cache =& drupal_static(__FUNCTION__, FALSE);
   if ($cache === FALSE) {
     $cache = NULL;
-    $main_menu_mini_panel = variable_get('amazee_crumbs_main_menu_mini_panel');
-    if ($main_menu_mini_panel) {
-      $mini = panels_mini_load($main_menu_mini_panel);
-      if ($mini) {
-        ctools_include('plugins', 'panels');
-        /** @var panels_display $display */
-        $display = $mini->display;
-        foreach ($display->content as $pane) {
-          if (strpos($pane->subtype, 'superfish-') === 0) {
-            if (panels_pane_access($pane, $display)) {
-              list(, $superfish_id) = explode('-', $pane->subtype);
-              list($main_menu_name) = explode(':', variable_get('superfish_menu_' . $superfish_id));
-              $cache = $main_menu_name;
-              break;
+    if (!path_is_admin(current_path())) {
+      $main_menu_mini_panel = variable_get('amazee_crumbs_main_menu_mini_panel');
+      if ($main_menu_mini_panel) {
+        $mini = panels_mini_load($main_menu_mini_panel);
+        if ($mini) {
+          ctools_include('plugins', 'panels');
+          /** @var panels_display $display */
+          $display = $mini->display;
+          foreach ($display->content as $pane) {
+            if (strpos($pane->subtype, 'superfish-') === 0) {
+              if (panels_pane_access($pane, $display)) {
+                list(, $superfish_id) = explode('-', $pane->subtype);
+                list($main_menu_name) = explode(':', variable_get('superfish_menu_' . $superfish_id));
+                $cache = $main_menu_name;
+                break;
+              }
             }
           }
         }
