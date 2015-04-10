@@ -23,10 +23,13 @@ class amazee_crumbs_MonoPlugin_FirstPathFromActiveTrail implements crumbs_MonoPl
     if ($path == crumbs()->page->path) {
       $active_trail = menu_get_active_trail();
       if ($item = end($active_trail)) {
-        return isset($item['link_path']) ? $item['link_path'] : FALSE;
+        // Do not process paths with placeholders.
+        if (isset($item['link_path']) && (strpos($item['link_path'], '%') === FALSE)) {
+          return $item['link_path'];
+        }
       }
     }
-    return FALSE;
+    return NULL;
   }
 
 }
