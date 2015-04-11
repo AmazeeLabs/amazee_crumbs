@@ -12,4 +12,6 @@ The `amazee_crumbs.nodeTitle` plugin works only if "Show the current page at the
 
 ## Other features
 
-If `$conf['amazee_crumbs_main_menu_mini_panel']` is set in the `settings.php`, the queries performed by `menu.*` plugins will be corrected to use only the one active main menu. Basically, we need this on all websites using the menu-per-domain system.
+If `$conf['amazee_crumbs_main_menu_mini_panel']` is set in the `settings.php`, the queries performed by `menu.*` plugins will be corrected to use only the one active main menu. Basically, we need this on all websites using the **menu-per-domain system**.
+
+The `amazee_crumbs` module performs early initialization of Crumbs' breadcrumbs in `hook_init()`, and uses the calculated trail to **set the active trail** (with `menu_tree_set_path()`), so menu links are marked as active.
