@@ -27,6 +27,42 @@ function amazee_crumbs_crumbs_plugins($api) {
 }
 
 /**
+ * Implements hook_init().
+ */
+function amazee_crumbs_init() {
+
+  // Set active trail basing on the calculated breadcrumbs. This is required to
+  // indicate menu items as active.
+  $set_active_trail = TRUE;
+  if (function_exists('_breadcrumb_tuning_get')) {
+    list($matched_rule) = _breadcrumb_tuning_get();
+    if (!empty($matched_rule['actions']['set-active-trail-path'])) {
+      // The breadcrumb_tuning module has been handled the active trail.
+      $set_active_trail = FALSE;
+    }
+  }
+  if (
+    $set_active_trail
+    && ($main_menu_name = _amazee_crumbs_get_active_main_menu_name())
+  ) {
+    foreach (array_reverse(crumbs()->page->breadcrumbItems) as $item) {
+      if (strpos($item['href'], '%') === FALSE) {
+        $menu_link_exists = (bool) db_select('menu_links', 'ml')
+          ->condition('ml.menu_name', $main_menu_name)
+          ->condition('ml.link_path', $item['href'])
+          ->countQuery()
+          ->execute()
+          ->fetchField();
+        if ($menu_link_exists) {
+          menu_tree_set_path($main_menu_name, $item['href']);
+          break;
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_query_TAG_alter().
  */
 function amazee_crumbs_query_crumbs_select_menu_links_alter(QueryAlterableInterface $query) {
