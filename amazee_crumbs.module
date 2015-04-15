@@ -90,7 +90,8 @@ function _amazee_crumbs_get_active_main_menu_name() {
   $cache =& drupal_static(__FUNCTION__, FALSE);
   if ($cache === FALSE) {
     $cache = NULL;
-    if (!path_is_admin(current_path())) {
+    $current_path = current_path();
+    if ($current_path == 'admin/structure/crumbs/debug' || !path_is_admin($current_path)) {
       $main_menu_mini_panel = variable_get('amazee_crumbs_main_menu_mini_panel');
       if ($main_menu_mini_panel) {
         $mini = panels_mini_load($main_menu_mini_panel);
